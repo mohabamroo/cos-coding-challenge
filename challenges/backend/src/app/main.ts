@@ -5,6 +5,8 @@ import { DependencyIdentifier } from "./DependencyIdentifiers";
 import { AuctionMonitorApp } from "./AuctionMonitorApp";
 import { CarOnSaleClient } from "./services/CarOnSaleClient/classes/CarOnSaleClient";
 import { ICarOnSaleClient } from "./services/CarOnSaleClient/interface/ICarOnSaleClient";
+import { IHttpClient } from "./services/HttpClient/interface/IHttpClient";
+import { HttpClient } from "./services/HttpClient/classes/HttpClient";
 
 /*
  * Create the DI container.
@@ -20,6 +22,7 @@ container.bind<ILogger>(DependencyIdentifier.LOGGER).to(Logger);
 container
     .bind<ICarOnSaleClient>(DependencyIdentifier.COS_CLIENT)
     .to(CarOnSaleClient);
+container.bind<IHttpClient>(DependencyIdentifier.HTTP_CLIENT).to(HttpClient);
 
 /*
  * Inject all dependencies in the application & retrieve application instance.
