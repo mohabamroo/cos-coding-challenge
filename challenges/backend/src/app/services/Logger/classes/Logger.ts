@@ -9,7 +9,6 @@ export class Logger implements ILogger {
     public log(message: string): void {
         console.log(`[LOG]: ${message}`);
     }
-
     public warn(message: string): void {
         console.warn(`[WARN]: ${message}`);
     }

@@ -25,12 +25,8 @@ export interface ICarOnSaleClient {
     /**
      * Authenticates the client with the CarOnSale API.
      * @returns None, as the authentication token and user ID are stored in the client.
-     * @throws An error if the client could not be authenticated.
+     * @throws ICarOnSaleAuthError (An error if the client could not be authenticated.)
      * @remarks This method should be called before any other method that requires authentication.
-     * @example
-     * ```
-     * await authenticate();
-     * ```
      * @example
      * ```
      * try {
@@ -51,7 +47,8 @@ export interface ICarOnSaleClient {
 
     /**
      * Retrieves a list of running auctions from the CarOnSale API.
-     * @returns A Promise that resolves with the list of running auctions.
+     * @returns Promise<IAuction[]> (A Promise that resolves with the list of running auctions)
+     * @throws ICarOnSaleError
      * @remarks This method should be called only if the client is authenticated.
      */
     getRunningAuctions(): Promise<IAuction[]>;
