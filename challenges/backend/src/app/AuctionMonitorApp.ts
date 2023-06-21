@@ -2,7 +2,11 @@ import { inject, injectable } from "inversify";
 import { ILogger } from "./services/Logger/interface/ILogger";
 import { DependencyIdentifier } from "./DependencyIdentifiers";
 import "reflect-metadata";
-import { ICarOnSaleClient } from "./services/CarOnSaleClient/interface/ICarOnSaleClient";
+import {
+    ICarOnSaleAuthError,
+    ICarOnSaleClient,
+    ICarOnSaleError,
+} from "./services/CarOnSaleClient/interface/ICarOnSaleClient";
 import { IAuctionController } from "./services/CarOnSaleClient/interface/IAuctionController";
 
 @injectable()
@@ -17,20 +21,31 @@ export class AuctionMonitorApp {
 
     public async start(): Promise<void> {
         this.logger.log(`Auction Monitor started.`);
-        const auctions = await this.carOnSaleClient.getRunningAuctions();
+        try {
+            const auctions = await this.carOnSaleClient.getRunningAuctions();
 
-        this.auctionController.setData(auctions);
-        this.logger.info(`Total auctions count: ${auctions.length}`);
-        this.logger.info(
-            `Average bids number: ${this.auctionController
-                .getAvgBidsNum()
-                .toFixed(2)}`
-        );
-        this.logger.info(
-            `Average progress percentage: ${(
-                this.auctionController.getAvgProgressPercentage() * 100
-            ).toFixed(2)} %`
-        );
-        this.logger.info(`Auction Monitor finished.`);
+            this.auctionController.setData(auctions);
+            this.logger.info(`Total auctions count: ${auctions.length}`);
+            this.logger.info(
+                `Average bids number: ${this.auctionController
+                    .getAvgBidsNum()
+                    .toFixed(2)}`
+            );
+            this.logger.info(
+                `Average progress percentage: ${(
+                    this.auctionController.getAvgProgressPercentage() * 100
+                ).toFixed(2)} %`
+            );
+            this.logger.info(`Auction Monitor finished.`);
+        } catch (err) {
+            // TODO: add sentry to capture error instance
+            if (err instanceof ICarOnSaleAuthError) {
+                this.logger.error(`Failed to authenticate: ${err.message}`);
+            } else if (err instanceof ICarOnSaleError) {
+                this.logger.error(`Failed to get auctions: ${err.message}`);
+            } else {
+                this.logger.error(`Failed to get auctions/average`);
+            }
+        }
     }
 }

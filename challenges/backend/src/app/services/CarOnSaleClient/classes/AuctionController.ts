@@ -4,10 +4,7 @@ import { IAuction } from "../interface/IAuction";
 import { IAuctionController } from "../interface/IAuctionController";
 import { injectable } from "inversify";
 import { AUCTIONS_NOT_FOUND } from "../../../constants";
-import {
-    calculateAverageByKey,
-    calculateAverage,
-} from "../../../helpers/array-helper";
+import { calculateAverage } from "../../../helpers/array-helper";
 
 @injectable()
 export class AuctionController implements IAuctionController {
@@ -21,7 +18,7 @@ export class AuctionController implements IAuctionController {
 
     public getAvgBidsNum(): number {
         if (!this.auctions) throw new Error(AUCTIONS_NOT_FOUND);
-        return calculateAverageByKey(this.auctions, "numBids");
+        return calculateAverage(this.auctions.map((x) => x.numBids));
     }
 
     public getAvgProgressPercentage(): number {

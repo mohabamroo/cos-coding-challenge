@@ -20,9 +20,9 @@ import {
 import { config } from "../../../config";
 @injectable()
 export class CarOnSaleClient implements ICarOnSaleClient {
-    public baseUrl: string = COS_API_ROOT;
-    public token?: string;
-    public userId?: string;
+    baseUrl: string = COS_API_ROOT;
+    token?: string;
+    userId?: string;
 
     public constructor(
         @inject(DependencyIdentifier.HTTP_CLIENT)
@@ -56,7 +56,7 @@ export class CarOnSaleClient implements ICarOnSaleClient {
     }
 
     public async getRunningAuctions(): Promise<IAuction[]> {
-        await this.authenticate();
+        if (!this.isAuthenticated()) await this.authenticate();
 
         try {
             const response = await this.httpClient.get(

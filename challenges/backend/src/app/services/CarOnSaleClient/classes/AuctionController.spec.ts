@@ -29,13 +29,14 @@ describe("AuctionController Tests", () => {
     });
 
     it("should fail to compute average bids num ", async () => {
-        try {
-            const auctionController = new AuctionController();
-            auctionController.setData(auctions);
-            auctionController.getAvgBidsNum();
-        } catch (err: any) {
-            assert.equal(err.message, AUCTIONS_NOT_FOUND);
-        }
+        assert.throws(
+            function () {
+                const auctionController = new AuctionController();
+                auctionController.getAvgBidsNum();
+            },
+            Error,
+            AUCTIONS_NOT_FOUND
+        );
     });
 
     it("should return average progress percentage ", async () => {
